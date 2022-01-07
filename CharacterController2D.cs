@@ -40,9 +40,15 @@ public class CharacterController2D : MonoBehaviour
 		grounded = Physics2D.OverlapArea(topLeft.transform.position, bottomRight.transform.position, whatIsGround);
 
 		Vector3 currentVelocity = rb.velocity;
-		Vector3 targetVelocity = new Vector2(move * 10f * Time.fixedDeltaTime, rb.velocity.y);
+		Vector3 targetVelocity = new Vector3(move * 10f * Time.fixedDeltaTime, rb.velocity.y, 0);
 
 		rb.velocity = Vector3.SmoothDamp(currentVelocity, targetVelocity, ref velocity, .05f);
+
+		if (grounded == true && jump == true)
+		{
+			rb.velocity = new Vector3(currentVelocity.x, 20f, 0);
+			jump = false;
+		}
 
 		if (move > 0 && direction == false)
 		{
@@ -51,12 +57,6 @@ public class CharacterController2D : MonoBehaviour
 		{
 			FlipCharacter();
 		}
-
-		if (grounded == true && jump == true)
-		{
-			rb.AddForce(new Vector2(0f, 750f));
-			jump = false;
-		}
 	}
 
 	private void FlipCharacter()
@@ -64,7 +64,7 @@ public class CharacterController2D : MonoBehaviour
 		direction = !direction;
 
 		transform.localScale = new Vector3(transform.localScale.x * -1,
-										   transform.localScale.y,
-										   transform.localScale.z);
+						   transform.localScale.y,
+						   transform.localScale.z);
 	}
 }
